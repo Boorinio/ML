@@ -67,7 +67,7 @@ class MaxPool1D implements Hidden
      * @param int $poolSize Size of the pooling window
      * @param int $inputLength Length of the input sequence
      * @param int $stride Stride of the pooling operation (default: same as poolSize)
-     * @throws \Rubix\ML\Exceptions\InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(int $poolSize, int $inputLength, int $stride = 0)
     {
@@ -106,7 +106,7 @@ class MaxPool1D implements Hidden
      *
      * @internal
      *
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return positive-int
      */
     public function width() : int
@@ -152,7 +152,7 @@ class MaxPool1D implements Hidden
      * @internal
      *
      * @param \Tensor\Matrix $input
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return \Tensor\Matrix
      */
     public function forward(Matrix $input) : Matrix
@@ -216,7 +216,7 @@ class MaxPool1D implements Hidden
      * @internal
      *
      * @param \Tensor\Matrix $input
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return \Tensor\Matrix
      */
     public function infer(Matrix $input) : Matrix
@@ -271,10 +271,10 @@ class MaxPool1D implements Hidden
      *
      * @internal
      *
-     * @param \Rubix\ML\Deferred $prevGradient
-     * @param \Rubix\ML\NeuralNet\Optimizers\Optimizer $optimizer
-     * @throws \Rubix\ML\Exceptions\RuntimeException
-     * @return \Rubix\ML\Deferred
+     * @param Deferred $prevGradient
+     * @param Optimizer $optimizer
+     * @throws RuntimeException
+     * @return Deferred
      */
     public function back(Deferred $prevGradient, Optimizer $optimizer) : Deferred
     {
@@ -296,7 +296,7 @@ class MaxPool1D implements Hidden
      *
      * @internal
      *
-     * @param \Rubix\ML\Deferred $prevGradient
+     * @param Deferred $prevGradient
      * @param array<int, array<int, int>> $maxIndices
      * @param int $inputChannels
      * @param int $inputLength

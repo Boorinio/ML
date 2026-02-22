@@ -32,22 +32,22 @@ class Conv1DTest extends TestCase
     protected int $inputChannels = 1;
 
     /**
-     * @var \Tensor\Matrix
+     * @var Matrix
      */
     protected Matrix $input;
 
     /**
-     * @var \Rubix\ML\Deferred
+     * @var Deferred
      */
     protected Deferred $prevGrad;
 
     /**
-     * @var \Rubix\ML\NeuralNet\Optimizers\Stochastic
+     * @var Stochastic
      */
     protected Stochastic $optimizer;
 
     /**
-     * @var \Rubix\ML\NeuralNet\Layers\Conv1D
+     * @var Conv1D
      */
     protected Conv1D $layer;
 

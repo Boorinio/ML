@@ -39,7 +39,7 @@ class AvgPool1DTest extends TestCase
     protected Deferred $prevGrad;
 
     /**
-     * @var \Rubix\ML\NeuralNet\Optimizers\Stochastic
+     * @var Stochastic
      */
     protected Stochastic $optimizer;
 

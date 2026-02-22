@@ -87,30 +87,30 @@ class Conv1D implements Hidden, Parametric
     /**
      * The kernel weight initializer.
      *
-     * @var \Rubix\ML\NeuralNet\Initializers\Initializer
+     * @var Initializer
      */
-    protected \Rubix\ML\NeuralNet\Initializers\Initializer $kernelInitializer;
+    protected Initializer $kernelInitializer;
 
     /**
      * The bias initializer.
      *
-     * @var \Rubix\ML\NeuralNet\Initializers\Initializer
+     * @var Initializer
      */
-    protected \Rubix\ML\NeuralNet\Initializers\Initializer $biasInitializer;
+    protected Initializer $biasInitializer;
 
     /**
      * The kernel weights.
      *
-     * @var \Rubix\ML\NeuralNet\Parameter|null
+     * @var Parameter|null
      */
-    protected ?\Rubix\ML\NeuralNet\Parameter $weights = null;
+    protected ?Parameter $weights = null;
 
     /**
      * The biases.
      *
-     * @var \Rubix\ML\NeuralNet\Parameter|null
+     * @var Parameter|null
      */
-    protected ?\Rubix\ML\NeuralNet\Parameter $biases = null;
+    protected ?Parameter $biases = null;
 
     /**
      * The computed output length.
@@ -122,16 +122,16 @@ class Conv1D implements Hidden, Parametric
     /**
      * The memorized inputs to the layer.
      *
-     * @var \Tensor\Matrix|null
+     * @var Matrix|null
      */
-    protected ?\Tensor\Matrix $input = null;
+    protected ?Matrix $input = null;
 
     /**
      * The padded input (if padding was applied).
      *
-     * @var \Tensor\Matrix|null
+     * @var Matrix|null
      */
-    protected ?\Tensor\Matrix $paddedInput = null;
+    protected ?Matrix $paddedInput = null;
 
     /**
      * @param int $filters Number of output filters (output channels)
@@ -142,9 +142,9 @@ class Conv1D implements Hidden, Parametric
      * @param int $padding Zero-padding on both sides (default 0)
      * @param float $l2Penalty L2 regularization (default 0.0)
      * @param bool $bias Include bias parameter (default true)
-     * @param \Rubix\ML\NeuralNet\Initializers\Initializer|null $kernelInitializer Weight initializer
-     * @param \Rubix\ML\NeuralNet\Initializers\Initializer|null $biasInitializer Bias initializer
-     * @throws \Rubix\ML\Exceptions\InvalidArgumentException
+     * @param Initializer|null $kernelInitializer Weight initializer
+     * @param Initializer|null $biasInitializer Bias initializer
+     * @throws InvalidArgumentException
      */
     public function __construct(
         int $filters,
@@ -242,7 +242,7 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return \Tensor\Matrix
      */
     public function weights() : Matrix
@@ -288,7 +288,7 @@ class Conv1D implements Hidden, Parametric
      * @internal
      *
      * @param \Tensor\Matrix $input
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return \Tensor\Matrix
      */
     public function forward(Matrix $input) : Matrix
@@ -335,7 +335,7 @@ class Conv1D implements Hidden, Parametric
      * @internal
      *
      * @param \Tensor\Matrix $input
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return \Tensor\Matrix
      */
     public function infer(Matrix $input) : Matrix
@@ -371,10 +371,10 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @param \Rubix\ML\Deferred $prevGradient
-     * @param \Rubix\ML\NeuralNet\Optimizers\Optimizer $optimizer
-     * @throws \Rubix\ML\Exceptions\RuntimeException
-     * @return \Rubix\ML\Deferred
+     * @param Deferred $prevGradient
+     * @param Optimizer $optimizer
+     * @throws RuntimeException
+     * @return Deferred
      */
     public function back(Deferred $prevGradient, Optimizer $optimizer) : Deferred
     {
@@ -458,7 +458,7 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @throws \Rubix\ML\Exceptions\RuntimeException
+     * @throws RuntimeException
      * @return \Generator<\Rubix\ML\NeuralNet\Parameter>
      */
     public function parameters() : Generator
@@ -479,7 +479,7 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @param \Rubix\ML\NeuralNet\Parameter[] $parameters
+     * @param Parameter[] $parameters
      */
     public function restore(array $parameters) : void
     {
