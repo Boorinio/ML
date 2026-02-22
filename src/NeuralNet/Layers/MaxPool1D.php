@@ -151,9 +151,9 @@ class MaxPool1D implements Hidden
      *
      * @internal
      *
-     * @param \Tensor\Matrix $input
+     * @param Matrix $input
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function forward(Matrix $input) : Matrix
     {
@@ -215,9 +215,9 @@ class MaxPool1D implements Hidden
      *
      * @internal
      *
-     * @param \Tensor\Matrix $input
+     * @param Matrix $input
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function infer(Matrix $input) : Matrix
     {
@@ -300,7 +300,7 @@ class MaxPool1D implements Hidden
      * @param array<int, array<int, int>> $maxIndices
      * @param int $inputChannels
      * @param int $inputLength
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function gradient(
         Deferred $prevGradient,

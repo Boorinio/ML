@@ -243,7 +243,7 @@ class Conv1D implements Hidden, Parametric
      * @internal
      *
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function weights() : Matrix
     {
@@ -287,9 +287,9 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @param \Tensor\Matrix $input
+     * @param Matrix $input
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function forward(Matrix $input) : Matrix
     {
@@ -334,9 +334,9 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @param \Tensor\Matrix $input
+     * @param Matrix $input
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function infer(Matrix $input) : Matrix
     {
@@ -426,13 +426,13 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @param \Tensor\Matrix $kernel
-     * @param \Tensor\Matrix $dOut
-     * @param \Tensor\Matrix $paddedInput
-     * @param \Tensor\Matrix $input
+     * @param Matrix $kernel
+     * @param Matrix $dOut
+     * @param Matrix $paddedInput
+     * @param Matrix $input
      * @param int $batchSize
      * @param int $paddedLength
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function gradient(
         Matrix $kernel,
@@ -459,7 +459,7 @@ class Conv1D implements Hidden, Parametric
      * @internal
      *
      * @throws RuntimeException
-     * @return \Generator<\Rubix\ML\NeuralNet\Parameter>
+     * @return Generator<Parameter>
      */
     public function parameters() : Generator
     {
@@ -490,8 +490,8 @@ class Conv1D implements Hidden, Parametric
     /**
      * Pad the input matrix with zeros on both sides of the sequence.
      *
-     * @param \Tensor\Matrix $input
-     * @return \Tensor\Matrix
+     * @param Matrix $input
+     * @return Matrix
      */
     protected function padInput(Matrix $input) : Matrix
     {
@@ -533,11 +533,11 @@ class Conv1D implements Hidden, Parametric
     /**
      * Compute the convolution operation.
      *
-     * @param \Tensor\Matrix $paddedInput Padded input matrix
-     * @param \Tensor\Matrix $kernel Kernel weights
+     * @param Matrix $paddedInput Padded input matrix
+     * @param Matrix $kernel Kernel weights
      * @param int $paddedLength Length of padded sequence
      * @param int $batchSize Number of samples in batch
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     protected function computeConvolution(
         Matrix $paddedInput,
@@ -584,9 +584,9 @@ class Conv1D implements Hidden, Parametric
     /**
      * Add bias to the output.
      *
-     * @param \Tensor\Matrix $output
+     * @param Matrix $output
      * @param int $batchSize
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     protected function addBias(Matrix $output, int $batchSize) : Matrix
     {
@@ -618,11 +618,11 @@ class Conv1D implements Hidden, Parametric
     /**
      * Compute the kernel gradient.
      *
-     * @param \Tensor\Matrix $paddedInput
-     * @param \Tensor\Matrix $dOut
+     * @param Matrix $paddedInput
+     * @param Matrix $dOut
      * @param int $paddedLength
      * @param int $batchSize
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     protected function computeKernelGradient(
         Matrix $paddedInput,
@@ -666,11 +666,11 @@ class Conv1D implements Hidden, Parametric
     /**
      * Compute the input gradient using transposed convolution.
      *
-     * @param \Tensor\Matrix $kernel
-     * @param \Tensor\Matrix $dOut
+     * @param Matrix $kernel
+     * @param Matrix $dOut
      * @param int $paddedLength
      * @param int $batchSize
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     protected function computeInputGradient(
         Matrix $kernel,
@@ -727,9 +727,9 @@ class Conv1D implements Hidden, Parametric
     /**
      * Remove padding from the gradient.
      *
-     * @param \Tensor\Matrix $dPaddedInput
-     * @param \Tensor\Matrix $originalInput
-     * @return \Tensor\Matrix
+     * @param Matrix $dPaddedInput
+     * @param Matrix $originalInput
+     * @return Matrix
      */
     protected function unpadGradient(Matrix $dPaddedInput, Matrix $originalInput) : Matrix
     {

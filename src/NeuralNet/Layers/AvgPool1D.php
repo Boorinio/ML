@@ -144,9 +144,9 @@ class AvgPool1D implements Hidden
      *
      * @internal
      *
-     * @param \Tensor\Matrix $input
+     * @param Matrix $input
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function forward(Matrix $input) : Matrix
     {
@@ -198,9 +198,9 @@ class AvgPool1D implements Hidden
      *
      * @internal
      *
-     * @param \Tensor\Matrix $input
+     * @param Matrix $input
      * @throws RuntimeException
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function infer(Matrix $input) : Matrix
     {
@@ -246,7 +246,7 @@ class AvgPool1D implements Hidden
      * @param int $poolSize
      * @param int $stride
      * @param int $outputLength
-     * @return \Tensor\Matrix
+     * @return Matrix
      */
     public function gradient(
         Deferred $prevGradient,
