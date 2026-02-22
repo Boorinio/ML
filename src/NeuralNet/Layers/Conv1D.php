@@ -260,7 +260,7 @@ class Conv1D implements Hidden, Parametric
      *
      * @internal
      *
-     * @param positive-int $fanIn
+     * @param positive-int $fanIn (The fan in is not used; fan-in is calculated from inputChannels * kernelSize)
      * @return positive-int
      */
     public function initialize(int $fanIn) : int
