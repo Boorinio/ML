@@ -52,9 +52,9 @@ class AvgPool1D implements Hidden
     /**
      * The computed output length.
      *
-     * @var positive-int|null
+     * @var positive-int
      */
-    protected ?int $outputLength = null;
+    protected int $outputLength;
 
     /**
      * @param int $poolSize Size of the pooling window

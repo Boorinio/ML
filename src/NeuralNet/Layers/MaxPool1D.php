@@ -52,9 +52,9 @@ class MaxPool1D implements Hidden
     /**
      * The computed output length.
      *
-     * @var positive-int|null
+     * @var positive-int
      */
-    protected ?int $outputLength = null;
+    protected int $outputLength;
 
     /**
      * The indices of the max values for backpropagation.
