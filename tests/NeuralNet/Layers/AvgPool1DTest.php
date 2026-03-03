@@ -230,4 +230,62 @@ class AvgPool1DTest extends TestCase
             -1
         );
     }
+
+    /**
+     * @test
+     */
+    public function gradientNumericalCheck() : void
+    {
+        $layer = new AvgPool1D(2, 4, 1);
+        $layer->initialize(1);
+
+        $inputData = [[1.0, 2.0, 3.0, 4.0]];
+        $input = Matrix::quick($inputData);
+        $layer->forward($input);
+
+        $gradData = [[1.0, 1.0, 1.0]]; // output length = floor((4-2)/1) + 1 = 3
+        $prevGrad = new Deferred(function () use ($gradData) {
+            return Matrix::quick($gradData);
+        });
+
+        $gradient = $layer->back($prevGrad, $this->optimizer)->compute();
+        $analyticalGrad = $gradient->asArray()[0];
+
+        $epsilon = 1e-5;
+        $numericalGrad = [];
+
+        for ($i = 0; $i < 4; ++$i) {
+            $plus = $inputData;
+            $minus = $inputData;
+            $plus[0][$i] += $epsilon;
+            $minus[0][$i] -= $epsilon;
+
+            $layerPlus = new AvgPool1D(2, 4, 1);
+            $layerPlus->initialize(1);
+            $outPlus = $layerPlus->forward(Matrix::quick($plus));
+
+            $layerMinus = new AvgPool1D(2, 4, 1);
+            $layerMinus->initialize(1);
+            $outMinus = $layerMinus->forward(Matrix::quick($minus));
+
+            $sumPlus = array_sum($outPlus->asArray()[0]);
+            $sumMinus = array_sum($outMinus->asArray()[0]);
+
+            $numericalGrad[$i] = ($sumPlus - $sumMinus) / (2 * $epsilon);
+        }
+
+        for ($i = 0; $i < 4; ++$i) {
+            $this->assertEqualsWithDelta(
+                $numericalGrad[$i],
+                $analyticalGrad[$i],
+                1e-4,
+                "Gradient mismatch at index {$i}: numerical={$numericalGrad[$i]}, analytical={$analyticalGrad[$i]}"
+            );
+        }
+
+        $this->assertEqualsWithDelta(0.5, $analyticalGrad[0], 1e-10);
+        $this->assertEqualsWithDelta(1.0, $analyticalGrad[1], 1e-10);
+        $this->assertEqualsWithDelta(1.0, $analyticalGrad[2], 1e-10);
+        $this->assertEqualsWithDelta(0.5, $analyticalGrad[3], 1e-10);
+    }
 }

@@ -442,4 +442,158 @@ class Conv1DTest extends TestCase
         $this->assertArrayHasKey('weights', $params);
         $this->assertArrayNotHasKey('biases', $params);
     }
+
+    /**
+     * @test
+     */
+    public function forwardPassCalculation() : void
+    {
+        $layer = new Conv1D(
+            1,
+            3,
+            5,
+            1,
+            1,
+            0,
+            0.0,
+            false,
+            new Constant(0.1),
+            new Constant(0.0)
+        );
+
+        $layer->initialize(5);
+
+        $weights = $layer->weights();
+        $this->assertEqualsWithDelta(0.1, $weights[0][0], 1e-10);
+        $this->assertEqualsWithDelta(0.1, $weights[0][1], 1e-10);
+        $this->assertEqualsWithDelta(0.1, $weights[0][2], 1e-10);
+
+        $input = Matrix::quick([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+
+        $output = $layer->forward($input);
+        $outputArray = $output->asArray()[0];
+
+        $this->assertEqualsWithDelta(0.6, $outputArray[0], 1e-10);
+        $this->assertEqualsWithDelta(0.9, $outputArray[1], 1e-10);
+        $this->assertEqualsWithDelta(1.2, $outputArray[2], 1e-10);
+    }
+
+    /**
+     * @test
+     */
+    public function backwardPassCalculation() : void
+    {
+        $layer = new Conv1D(
+            1,
+            3,
+            5,
+            1,
+            1,
+            0,
+            0.0,
+            false,
+            new Constant(0.1),
+            new Constant(0.0)
+        );
+
+        $layer->initialize(5);
+        $weights = $layer->weights();
+        $this->assertEqualsWithDelta(0.1, $weights[0][0], 1e-10);
+        $this->assertEqualsWithDelta(0.1, $weights[0][1], 1e-10);
+        $this->assertEqualsWithDelta(0.1, $weights[0][2], 1e-10);
+
+        $input = Matrix::quick([[1.0, 2.0, 3.0, 4.0, 5.0]]);
+
+        $layer->forward($input);
+        $dOut = Matrix::quick([[0.5, 0.3, 0.2]]);
+
+        $prevGrad = new Deferred(function () use ($dOut) {
+            return $dOut;
+        });
+
+        $optimizer = new Stochastic(0.001);
+        $dInput = $layer->back($prevGrad, $optimizer)->compute();
+        $dInputArray = $dInput->asArray()[0];
+
+        $this->assertEquals(5, count($dInputArray));
+        $this->assertEqualsWithDelta(0.05, $dInputArray[0], 1e-10);
+        $this->assertEqualsWithDelta(0.08, $dInputArray[1], 1e-10);
+        $this->assertEqualsWithDelta(0.10, $dInputArray[2], 1e-10);
+        $this->assertEqualsWithDelta(0.05, $dInputArray[3], 1e-10);
+        $this->assertEqualsWithDelta(0.02, $dInputArray[4], 1e-10);
+    }
+
+    /**
+     * @test
+     */
+    public function gradientNumericalCheck() : void
+    {
+        $kernelSize = 3;
+        $inputLength = 5;
+        $filters = 1;
+        $inputChannels = 1;
+
+        $layer = new Conv1D(
+            $filters,
+            $kernelSize,
+            $inputLength,
+            $inputChannels,
+            1,
+            0,
+            0.0,
+            false,
+            new Constant(0.0),
+            new Constant(0.0)
+        );
+
+        $layer->initialize($inputLength);
+        $inputData = [[1.0, 2.0, 3.0, 4.0, 5.0]];
+        $input = Matrix::quick($inputData);
+
+        $layer->forward($input);
+
+        $dOutData = [[1.0, 1.0, 1.0]];
+        $dOut = Matrix::quick($dOutData);
+
+        $prevGrad = new Deferred(function () use ($dOut) {
+            return $dOut;
+        });
+
+        $optimizer = new Stochastic(0.001);
+
+        $dInput = $layer->back($prevGrad, $optimizer)->compute();
+        $analyticalGrad = $dInput->asArray()[0];
+
+        $epsilon = 1e-5;
+        $numericalGrad = [];
+
+        for ($i = 0; $i < $inputLength; ++$i) {
+            $plus = $inputData;
+            $minus = $inputData;
+            $plus[0][$i] += $epsilon;
+            $minus[0][$i] -= $epsilon;
+
+            $layerPlus = new Conv1D($filters, $kernelSize, $inputLength, $inputChannels, 1, 0, 0.0, false, new Constant(0.0), new Constant(0.0));
+            $layerPlus->initialize($inputLength);
+            $outPlus = $layerPlus->forward(Matrix::quick($plus));
+
+            $layerMinus = new Conv1D($filters, $kernelSize, $inputLength, $inputChannels, 1, 0, 0.0, false, new Constant(0.0), new Constant(0.0));
+            $layerMinus->initialize($inputLength);
+            $outMinus = $layerMinus->forward(Matrix::quick($minus));
+
+            $sumPlus = array_sum($outPlus->asArray()[0]);
+            $sumMinus = array_sum($outMinus->asArray()[0]);
+
+            $numericalGrad[$i] = ($sumPlus - $sumMinus) / (2 * $epsilon);
+        }
+
+        for ($i = 0; $i < $inputLength; ++$i) {
+            $this->assertEqualsWithDelta(
+                $numericalGrad[$i],
+                $analyticalGrad[$i],
+                1e-4,
+                "Input gradient mismatch at index {$i}: numerical={$numericalGrad[$i]}, analytical={$analyticalGrad[$i]}"
+            );
+        }
+    }
 }
