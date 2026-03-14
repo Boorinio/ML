@@ -256,7 +256,6 @@ class MaxPool1DTest extends TestCase
         $gradient = $layer->back($prevGrad, $this->optimizer)->compute();
         $analyticalGrad = $gradient->asArray()[0];
 
-
         // Expected gradients: [0, 2, 0, 1] (sum of gradients at max positions)
         $this->assertEquals(0.0, $analyticalGrad[0]);
         $this->assertEquals(2.0, $analyticalGrad[1]);
